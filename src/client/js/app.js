@@ -20,8 +20,14 @@ const diffTime = Math.abs(currentDate - arrivalDate);
 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
 
+
 // Event listener to add function to existing HTML DOM element
 
+// async function getData(url) {
+//     const response = await fetch(url);
+//     const responseInfo = await response.json();
+//     return responseInfo;
+// }
 
 
 /**
@@ -33,11 +39,12 @@ const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 const getGeoNameData = async(location) => {
     const geoURL = `http://api.geonames.org/searchJSON?q=${location}&password=${geoKey}&username=${geoUserName}`
     try {
+        //getData(geoURL)
         const res = await fetch(geoURL);
         const geoNameInfo = res.json();
         console.log(geoNameInfo);
         return geoNameInfo;
-        // handle error
+        //handle error
     } catch (error) {
         console.log('error', error);
     }
@@ -58,7 +65,7 @@ const getGeoNameData = async(location) => {
  ```
  */
 async function getCountryInfo(longitude, latitude) {
-    const bitURL = `https://api.weatherbit.io/v2.0/current?lat=${latitude}&lon=${longitude}&key=${bitKey}`;
+    const bitURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&key=${bitKey}`;
     try {
         const resBit = await fetch(bitURL);
         const weatherBitInfo = await resBit.json();
@@ -146,23 +153,3 @@ export { getGeoNameData }
 export { getCountryInfo }
 export { getCountryImage }
 export { getTravelInsights }
-
-/* Function to GET Project Data */
-/* const getData = async(url = '') => {
-    const request = await fetch(url);
-    try {
-        const getData = await request.json()
-    } catch (error) {
-        console.log('error', error);
-    }
-}; */
-
-
-/*postData('/addlocation', {
-    long: longitude,
-    lat: latitude,
-    countyName: country
-})
-.then(() => {
-    updateUI();
-});*/
