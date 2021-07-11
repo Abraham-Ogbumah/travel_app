@@ -1,8 +1,11 @@
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 import { getTravelInsights } from './js/app';
+import { setMinDate } from './js/date';
 
+let newMinDate = setMinDate();
 
+document.getElementById('arrivalDate').setAttribute('min', newMinDate);
 document.getElementById('submit').addEventListener('click', getTravelInsights);
 
 
