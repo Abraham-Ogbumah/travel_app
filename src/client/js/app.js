@@ -117,7 +117,7 @@ const updateUI = async(weatherForecastData, countryImageData, locationInfo, coun
             document.getElementById("temp-display").innerHTML = "The requested weather information is not available";
         }
         //else {
-        //     document.getElementById("temp-display").value = `Low Temp: ` + weatherForecastData[0].low_temp + `High Temp: ` + weatherForecastData[0].high_temp;
+        //     document.getElementById("temp-display").innerHTML = `Low Temp: ` + weatherForecastData[0].low_temp + `High Temp: ` + weatherForecastData[0].high_temp;
         // }
 
         document.getElementById('country').innerHTML = countryName;
