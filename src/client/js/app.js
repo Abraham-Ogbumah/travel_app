@@ -10,14 +10,20 @@ const geoKey = process.env.GEO_KEY;
 const bitKey = process.env.BIT_KEY;
 const pixaKey = process.env.PIXA_KEY;
 
+import { setMinDate } from './date';
 
 // Create a new date instance dynamically with JS
-let d = new Date();
-let currentDate = d.getMonth() + 1 + '.' + d.getDate() + '.' + d.getFullYear();
-let arrivalDate = document.getElementById('arrivalDate').value;
+function getDateDifference() {
+    const curDate = setMinDate(); //new Date();
+    const currentDate = new Date(curDate);
+    let arrivalDate = document.getElementById('arrivalDate').value;
+    const arrDate = new Date(arrivalDate);
 
-const diffTime = Math.abs(currentDate - arrivalDate);
-const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const diffTime = Math.abs(arrDate - currentDate) //
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+}
+
 
 
 
@@ -64,13 +70,14 @@ const getGeoNameData = async(location) => {
     }
  ```
  */
-async function getCountryInfo(longitude, latitude) {
-    const bitURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&key=${bitKey}`;
+async function getWeatherForecast(longitude, latitude) {
+    const noOfDays = getDateDifference();
+    const bitURL = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${latitude}&lon=${longitude}&key=${bitKey}&days=${noOfDays}`;
     try {
         const resBit = await fetch(bitURL);
         const weatherBitInfo = await resBit.json();
         console.log(weatherBitInfo);
-        const info = weatherBitInfo.data[0];
+        const info = weatherBitInfo.data;
         return info.weather;
     } catch (error) {
         console.log('error', error);
@@ -99,16 +106,22 @@ const getCountryImage = async(countryName) => {
 }
 
 /* Function to update UI */
-const updateUI = async(countryInfoData, countryImageData, locationInfo, countryName) => {
+const updateUI = async(weatherForecastData, countryImageData, locationInfo, countryName) => {
     try {
-        const city = document.getElementById('location').value;
-        document.getElementById('city').innerHTML = city;
+        document.getElementById('departure').innerHTML = document.getElementById('arrivalDate').value;
+        document.getElementById('daysAway').innerHTML = getDateDifference();
+        document.getElementById('city').innerHTML = document.getElementById('location').value;
+        //console.log(weatherForecastData.data);
+        if (weatherForecastData == null) {
+            console.log(weatherForecastData);
+            document.getElementById("temp-display").innerHTML = "The requested weather information is not available";
+        }
+        //else {
+        //     document.getElementById("temp-display").value = `Low Temp: ` + weatherForecastData[0].low_temp + `High Temp: ` + weatherForecastData[0].high_temp;
+        // }
+
         document.getElementById('country').innerHTML = countryName;
         document.getElementById('card-image').src = countryImageData;
-
-        // document.getElementById('longitude').innerHTML = ["longitude"];
-        // document.getElementById('latitude').innerHTML = ["latitude"];
-        // document.getElementById('country').innerHTML = ["country"];
     } catch (error) {
         console.log('error', error);
     }
@@ -122,9 +135,17 @@ async function getTravelInsights(e) {
     const geoNameInfo = await getGeoNameData(location);
     console.log(geoNameInfo.geonames);
     const { lng, lat, countryName } = geoNameInfo.geonames[0];
-    const countryInfo = await getCountryInfo(lng, lat);
+
+    const tripInDays = getDateDifference();
+
+    let weatherForecast = null;
+
+    if (tripInDays <= 16) {
+        weatherForecast = await getWeatherForecast(lng, lat);
+    };
+
     const countryImage = await getCountryImage(countryName);
-    updateUI(countryInfo, countryImage, location, countryName);
+    updateUI(weatherForecast, countryImage, location, countryName);
 }
 
 
@@ -150,6 +171,6 @@ const postData = async(url = '', data = {}) => {
 }
 
 export { getGeoNameData }
-export { getCountryInfo }
+export { getWeatherForecast }
 export { getCountryImage }
 export { getTravelInsights }

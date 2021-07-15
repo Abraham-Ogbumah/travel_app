@@ -14386,10 +14386,11 @@ try {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "getGeoNameData": () => (/* binding */ getGeoNameData),
-/* harmony export */   "getCountryInfo": () => (/* binding */ getCountryInfo),
+/* harmony export */   "getWeatherForecast": () => (/* binding */ getWeatherForecast),
 /* harmony export */   "getCountryImage": () => (/* binding */ getCountryImage),
 /* harmony export */   "getTravelInsights": () => (/* binding */ getTravelInsights)
 /* harmony export */ });
+/* harmony import */ var _date__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(397);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -14404,13 +14405,20 @@ var geoNameURL = 'http://api.geonames.org/searchJSON?q=';
 var geoUserName = "haybee";
 var geoKey = "@Haybee6";
 var bitKey = "91273af0da8646c59bf8bc75c2941a31";
-var pixaKey = "11102158-6517df99bff988fbbd925da17"; // Create a new date instance dynamically with JS
+var pixaKey = "11102158-6517df99bff988fbbd925da17";
+ // Create a new date instance dynamically with JS
 
-var d = new Date();
-var currentDate = d.getMonth() + 1 + '.' + d.getDate() + '.' + d.getFullYear();
-var arrivalDate = document.getElementById('arrivalDate').value;
-var diffTime = Math.abs(currentDate - arrivalDate);
-var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Event listener to add function to existing HTML DOM element
+function getDateDifference() {
+  var curDate = (0,_date__WEBPACK_IMPORTED_MODULE_0__.setMinDate)(); //new Date();
+
+  var currentDate = new Date(curDate);
+  var arrivalDate = document.getElementById('arrivalDate').value;
+  var arrDate = new Date(arrivalDate);
+  var diffTime = Math.abs(arrDate - currentDate); //
+
+  var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+} // Event listener to add function to existing HTML DOM element
 // async function getData(url) {
 //     const response = await fetch(url);
 //     const responseInfo = await response.json();
@@ -14423,6 +14431,7 @@ var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Event listener to
  * @returns
  * 
  */
+
 
 var getGeoNameData = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(location) {
@@ -14474,8 +14483,8 @@ var getGeoNameData = /*#__PURE__*/function () {
  */
 
 
-function getCountryInfo(_x2, _x3) {
-  return _getCountryInfo.apply(this, arguments);
+function getWeatherForecast(_x2, _x3) {
+  return _getWeatherForecast.apply(this, arguments);
 }
 /**
  *
@@ -14487,42 +14496,43 @@ function getCountryInfo(_x2, _x3) {
  */
 
 
-function _getCountryInfo() {
-  _getCountryInfo = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(longitude, latitude) {
-    var bitURL, resBit, weatherBitInfo, info;
+function _getWeatherForecast() {
+  _getWeatherForecast = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(longitude, latitude) {
+    var noOfDays, bitURL, resBit, weatherBitInfo, info;
     return regeneratorRuntime.wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            bitURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=".concat(latitude, "&lon=").concat(longitude, "&key=").concat(bitKey);
-            _context5.prev = 1;
-            _context5.next = 4;
+            noOfDays = getDateDifference();
+            bitURL = "https://api.weatherbit.io/v2.0/forecast/daily?lat=".concat(latitude, "&lon=").concat(longitude, "&key=").concat(bitKey, "&days=").concat(noOfDays);
+            _context5.prev = 2;
+            _context5.next = 5;
             return fetch(bitURL);
 
-          case 4:
+          case 5:
             resBit = _context5.sent;
-            _context5.next = 7;
+            _context5.next = 8;
             return resBit.json();
 
-          case 7:
+          case 8:
             weatherBitInfo = _context5.sent;
             console.log(weatherBitInfo);
-            info = weatherBitInfo.data[0];
+            info = weatherBitInfo.data;
             return _context5.abrupt("return", info.weather);
 
-          case 13:
-            _context5.prev = 13;
-            _context5.t0 = _context5["catch"](1);
+          case 14:
+            _context5.prev = 14;
+            _context5.t0 = _context5["catch"](2);
             console.log('error', _context5.t0);
 
-          case 16:
+          case 17:
           case "end":
             return _context5.stop();
         }
       }
-    }, _callee5, null, [[1, 13]]);
+    }, _callee5, null, [[2, 14]]);
   }));
-  return _getCountryInfo.apply(this, arguments);
+  return _getWeatherForecast.apply(this, arguments);
 }
 
 var getCountryImage = /*#__PURE__*/function () {
@@ -14568,19 +14578,26 @@ var getCountryImage = /*#__PURE__*/function () {
 
 
 var updateUI = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(countryInfoData, countryImageData, locationInfo, countryName) {
-    var city;
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(weatherForecastData, countryImageData, locationInfo, countryName) {
     return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             try {
-              city = document.getElementById('location').value;
-              document.getElementById('city').innerHTML = city;
+              document.getElementById('departure').innerHTML = document.getElementById('arrivalDate').value;
+              document.getElementById('daysAway').innerHTML = getDateDifference();
+              document.getElementById('city').innerHTML = document.getElementById('location').value; //console.log(weatherForecastData.data);
+
+              if (weatherForecastData == null) {
+                console.log(weatherForecastData);
+                document.getElementById("temp-display").innerHTML = "The requested weather information is not available";
+              } //else {
+              //     document.getElementById("temp-display").value = `Low Temp: ` + weatherForecastData[0].low_temp + `High Temp: ` + weatherForecastData[0].high_temp;
+              // }
+
+
               document.getElementById('country').innerHTML = countryName;
-              document.getElementById('card-image').src = countryImageData; // document.getElementById('longitude').innerHTML = ["longitude"];
-              // document.getElementById('latitude').innerHTML = ["latitude"];
-              // document.getElementById('country').innerHTML = ["country"];
+              document.getElementById('card-image').src = countryImageData;
             } catch (error) {
               console.log('error', error);
             }
@@ -14608,7 +14625,7 @@ function getTravelInsights(_x9) {
 
 function _getTravelInsights() {
   _getTravelInsights = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(e) {
-    var location, geoNameInfo, _geoNameInfo$geonames, lng, lat, countryName, countryInfo, countryImage;
+    var location, geoNameInfo, _geoNameInfo$geonames, lng, lat, countryName, tripInDays, weatherForecast, countryImage;
 
     return regeneratorRuntime.wrap(function _callee6$(_context6) {
       while (1) {
@@ -14623,19 +14640,30 @@ function _getTravelInsights() {
             geoNameInfo = _context6.sent;
             console.log(geoNameInfo.geonames);
             _geoNameInfo$geonames = geoNameInfo.geonames[0], lng = _geoNameInfo$geonames.lng, lat = _geoNameInfo$geonames.lat, countryName = _geoNameInfo$geonames.countryName;
-            _context6.next = 9;
-            return getCountryInfo(lng, lat);
+            tripInDays = getDateDifference();
+            weatherForecast = null;
 
-          case 9:
-            countryInfo = _context6.sent;
+            if (!(tripInDays <= 16)) {
+              _context6.next = 13;
+              break;
+            }
+
             _context6.next = 12;
-            return getCountryImage(countryName);
+            return getWeatherForecast(lng, lat);
 
           case 12:
-            countryImage = _context6.sent;
-            updateUI(countryInfo, countryImage, location, countryName);
+            weatherForecast = _context6.sent;
 
-          case 14:
+          case 13:
+            ;
+            _context6.next = 16;
+            return getCountryImage(countryName);
+
+          case 16:
+            countryImage = _context6.sent;
+            updateUI(weatherForecast, countryImage, location, countryName);
+
+          case 18:
           case "end":
             return _context6.stop();
         }
@@ -14706,25 +14734,6 @@ var postData = /*#__PURE__*/function () {
 
 
 
-/* Function to GET Project Data */
-
-/* const getData = async(url = '') => {
-    const request = await fetch(url);
-    try {
-        const getData = await request.json()
-    } catch (error) {
-        console.log('error', error);
-    }
-}; */
-
-/*postData('/addlocation', {
-    long: longitude,
-    lat: latitude,
-    countyName: country
-})
-.then(() => {
-    updateUI();
-});*/
 
 /***/ }),
 /* 397 */
