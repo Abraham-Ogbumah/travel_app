@@ -14639,7 +14639,7 @@ function _getTravelInsights() {
           case 4:
             geoNameInfo = _context6.sent;
             console.log(geoNameInfo.geonames);
-            _geoNameInfo$geonames = geoNameInfo.geonames, lng = _geoNameInfo$geonames.lng, lat = _geoNameInfo$geonames.lat, countryName = _geoNameInfo$geonames.countryName;
+            _geoNameInfo$geonames = geoNameInfo.geonames[0], lng = _geoNameInfo$geonames.lng, lat = _geoNameInfo$geonames.lat, countryName = _geoNameInfo$geonames.countryName;
             tripInDays = getDateDifference();
             weatherForecast = null;
 

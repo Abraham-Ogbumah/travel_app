@@ -134,7 +134,7 @@ async function getTravelInsights(e) {
     const location = document.getElementById('location').value;
     const geoNameInfo = await getGeoNameData(location);
     console.log(geoNameInfo.geonames);
-    const { lng, lat, countryName } = geoNameInfo.geonames;
+    const { lng, lat, countryName } = geoNameInfo.geonames[0];
 
     const tripInDays = getDateDifference();
 
