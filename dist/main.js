@@ -14592,7 +14592,7 @@ var updateUI = /*#__PURE__*/function () {
                 console.log(weatherForecastData);
                 document.getElementById("temp-display").innerHTML = "The requested weather information is not available";
               } //else {
-              //     document.getElementById("temp-display").value = `Low Temp: ` + weatherForecastData[0].low_temp + `High Temp: ` + weatherForecastData[0].high_temp;
+              //     document.getElementById("temp-display").innerHTML = `Low Temp: ` + weatherForecastData[0].low_temp + `High Temp: ` + weatherForecastData[0].high_temp;
               // }
 
 
