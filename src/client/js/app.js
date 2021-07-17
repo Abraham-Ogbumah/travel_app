@@ -45,11 +45,10 @@ function getDateDifference() {
 const getGeoNameData = async(location) => {
     const geoURL = `http://api.geonames.org/searchJSON?q=${location}&password=${geoKey}&username=${geoUserName}`
     try {
-        //getData(geoURL)
         const res = await fetch(geoURL);
-        const geoNameInfo = res.json();
-        console.log(geoNameInfo);
-        return geoNameInfo;
+        const geoNameInfo = await res.json();
+        console.log(geoNameInfo.geonames[0]);
+        return geoNameInfo.geonames[0];
         //handle error
     } catch (error) {
         console.log('error', error);
@@ -78,7 +77,7 @@ async function getWeatherForecast(longitude, latitude) {
         const weatherBitInfo = await resBit.json();
         console.log(weatherBitInfo);
         const info = weatherBitInfo.data;
-        return info.weather;
+        return info[info.length - 1];
     } catch (error) {
         console.log('error', error);
     }
@@ -111,14 +110,12 @@ const updateUI = async(weatherForecastData, countryImageData, locationInfo, coun
         document.getElementById('departure').innerHTML = document.getElementById('arrivalDate').value;
         document.getElementById('daysAway').innerHTML = getDateDifference();
         document.getElementById('city').innerHTML = document.getElementById('location').value;
-        //console.log(weatherForecastData.data);
-        if (weatherForecastData == null) {
-            console.log(weatherForecastData);
+
+        if (weatherForecastData === null) {
             document.getElementById("temp-display").innerHTML = "The requested weather information is not available";
+        } else {
+            document.getElementById("temp-display").innerHTML = `Low Temp: ` + weatherForecastData.low_temp + ` High Temp: ` + weatherForecastData.high_temp;
         }
-        //else {
-        //     document.getElementById("temp-display").innerHTML = `Low Temp: ` + weatherForecastData[0].low_temp + `High Temp: ` + weatherForecastData[0].high_temp;
-        // }
 
         document.getElementById('country').innerHTML = countryName;
         document.getElementById('card-image').src = countryImageData;
@@ -133,14 +130,14 @@ async function getTravelInsights(e) {
     e.preventDefault();
     const location = document.getElementById('location').value;
     const geoNameInfo = await getGeoNameData(location);
-    console.log(geoNameInfo.geonames);
-    const { lng, lat, countryName } = geoNameInfo.geonames[0];
+    const { lng, lat, countryName } = geoNameInfo;
 
     const tripInDays = getDateDifference();
+    //console.log(tripInDays);
 
     let weatherForecast = null;
 
-    if (tripInDays <= 16) {
+    if (tripInDays < 16) {
         weatherForecast = await getWeatherForecast(lng, lat);
     };
 
@@ -174,3 +171,4 @@ export { getGeoNameData }
 export { getWeatherForecast }
 export { getCountryImage }
 export { getTravelInsights }
+export { getDateDifference }
