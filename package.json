@@ -7,7 +7,8 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node src/server/server.js",
         "build": "webpack --config webpack.dev.js",
-        "local": "webpack --config webpack.dev.js && node src/server/server.js"
+        "local": "webpack --config webpack.dev.js && node src/server/server.js",
+        "build-prod": "webpack --config webpack.prod.js"
     },
     "author": "Abraham Ogbumah",
     "license": "ISC",
@@ -36,6 +37,10 @@
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
         "express": "^4.17.1",
-        "node-fetch": "^2.6.1"
+        "node-fetch": "^2.6.1",
+        "optimize-css-assets-webpack-plugin": "^6.0.1",
+        "reset-css": "^5.0.1",
+        "simple-css-reset": "^3.0.0",
+        "workbox-webpack-plugin": "^6.1.5"
     }
 }

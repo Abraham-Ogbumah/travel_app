@@ -13,7 +13,9 @@ import dummy from './asset/images/dummy.jpg';
 
 document.getElementById('card-image').src = dummy;
 
-import './styles/resets.css'
+// index.js
+//import 'simple-css-reset/reset.css';
+//import 'reset-css'
 import './styles/header.scss'
 import './styles/form.scss'
 import './styles/result.scss'

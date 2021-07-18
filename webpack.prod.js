@@ -1,14 +1,13 @@
 const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const webpack = require("webpack");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const Dotenv = require('dotenv-webpack');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    mode: 'development',
-    devtool: 'source-map',
+    mode: 'production',
     entry: './src/client/index.js',
     output: {
         libraryTarget: 'var',
@@ -16,12 +15,8 @@ module.exports = {
     },
     module: {
         rules: [{
-                test: /\.css$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader']
-            },
-            {
                 test: /\.scss$/,
-                use: ['style-loader', 'css-loader', 'sass-loader']
+                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
             },
             {
                 test: /\.js$/,
@@ -32,22 +27,19 @@ module.exports = {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
                 type: 'asset',
             },
-
         ]
     },
+    optimization: {
+        minimizer: [new TerserPlugin({}), new OptimizeCSSAssetsPlugin({})],
+    },
     plugins: [
-        new HtmlWebpackPlugin({
+        new MiniCssExtractPlugin({
+            filename: '[name].css'
+        }),
+        new WorkboxPlugin.GenerateSW(),
+        new HtmlWebPackPlugin({
             template: "./src/client/views/index.html",
             filename: "./index.html",
         }),
-        new CleanWebpackPlugin({
-            dry: true,
-            verbose: true,
-            cleanStaleWebpackAssets: true,
-            protectWebpackAssets: false
-        }),
-        new MiniCssExtractPlugin(),
-        new Dotenv(),
-        new WorkboxPlugin.GenerateSW()
     ]
 }
