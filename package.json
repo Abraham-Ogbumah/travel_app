@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
+        "test-jest": "jest",
         "start": "node src/server/server.js",
         "build": "webpack --config webpack.dev.js",
         "local": "webpack --config webpack.dev.js && node src/server/server.js",
@@ -23,6 +24,7 @@
         "file-loader": "^6.2.0",
         "html-loader": "^2.1.2",
         "html-webpack-plugin": "^5.3.2",
+        "jest": "^27.0.6",
         "mini-css-extract-plugin": "^1.6.1",
         "node-sass": "^6.0.1",
         "sass": "^1.35.1",
