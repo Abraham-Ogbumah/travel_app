@@ -4,8 +4,8 @@
     "description": "Capstone Project",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "test-jest": "jest",
+        "test": "jest",
+        "test-jest": "echo \"Error: no test specified\" && exit 1",
         "start": "node src/server/server.js",
         "build": "webpack --config webpack.dev.js",
         "local": "webpack --config webpack.dev.js && node src/server/server.js",
